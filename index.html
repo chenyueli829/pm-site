@@ -1,0 +1,848 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Alex Chen — Product Manager</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Karla:wght@300;400;500;600&family=Noto+Serif+SC:wght@300;400;600&family=Noto+Sans+SC:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+    :root{
+      --bg:#f7f5f0;
+      --bg-warm:#f2efe8;
+      --surface:#ffffff;
+      --surface-muted:#ece9e1;
+      --border:#ddd8ce;
+      --border-light:#eae6de;
+      --text:#2c2a25;
+      --text-secondary:#8a847a;
+      --text-tertiary:#b5afa5;
+      --accent:#6b7c6e;
+      --accent-light:#8a9b8d;
+      --accent-faint:rgba(107,124,110,.08);
+      --radius:6px;
+      --font-display:'Cormorant Garamond','Noto Serif SC',Georgia,serif;
+      --font-body:'Karla','Noto Sans SC',system-ui,sans-serif;
+    }
+    html{scroll-behavior:smooth;font-size:16px}
+    body{
+      font-family:var(--font-body);
+      background:var(--bg);color:var(--text);
+      line-height:1.75;font-weight:400;
+      -webkit-font-smoothing:antialiased;
+    }
+    a{color:inherit;text-decoration:none}
+    ::selection{background:var(--accent);color:#fff}
+
+    /* ─── NAV ─── */
+    nav{
+      position:fixed;top:0;left:0;right:0;z-index:100;
+      padding:1.2rem 3rem;
+      background:rgba(247,245,240,.88);
+      backdrop-filter:blur(24px) saturate(1.2);
+      display:flex;align-items:center;justify-content:space-between;
+      transition:padding .4s ease,border-color .4s;
+      border-bottom:1px solid transparent;
+    }
+    nav.scrolled{
+      padding:.8rem 3rem;
+      border-bottom-color:var(--border-light);
+    }
+    .nav-logo{
+      font-family:var(--font-display);
+      font-size:1.3rem;font-weight:400;
+      letter-spacing:.02em;color:var(--text);
+    }
+    .nav-links{display:flex;gap:2.5rem;list-style:none}
+    .nav-links a{
+      font-size:.8rem;font-weight:500;
+      color:var(--text-secondary);
+      letter-spacing:.06em;text-transform:uppercase;
+      transition:color .3s;
+      position:relative;
+    }
+    .nav-links a::after{
+      content:'';position:absolute;bottom:-3px;left:0;
+      width:0;height:1px;background:var(--text);
+      transition:width .4s cubic-bezier(.25,.46,.45,.94);
+    }
+    .nav-links a:hover{color:var(--text)}
+    .nav-links a:hover::after{width:100%}
+    .hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;background:none;border:none}
+    .hamburger span{width:20px;height:1px;background:var(--text);transition:.3s}
+
+    /* ─── HERO ─── */
+    .hero{
+      min-height:100vh;display:flex;align-items:center;
+      padding:0 3rem;position:relative;
+    }
+    .hero-content{
+      max-width:720px;margin:0 auto;text-align:center;
+      padding:8rem 0 4rem;
+    }
+    .hero-greeting{
+      font-family:var(--font-display);
+      font-size:1rem;font-weight:300;font-style:italic;
+      color:var(--text-tertiary);letter-spacing:.08em;
+      margin-bottom:2rem;
+    }
+    .hero h1{
+      font-family:var(--font-display);
+      font-size:clamp(3rem,7vw,5.5rem);
+      font-weight:300;line-height:1.08;
+      letter-spacing:-.02em;
+      color:var(--text);
+      margin-bottom:2rem;
+    }
+    .hero h1 em{
+      font-style:italic;font-weight:300;
+      color:var(--accent);
+    }
+    .hero-desc{
+      font-size:1rem;font-weight:300;
+      color:var(--text-secondary);
+      max-width:480px;margin:0 auto 3rem;
+      line-height:1.9;
+    }
+    .hero-line{
+      width:1px;height:60px;background:var(--border);
+      margin:0 auto 2rem;
+    }
+    .hero-cta{display:flex;gap:1.5rem;justify-content:center;flex-wrap:wrap}
+    .btn{
+      display:inline-flex;align-items:center;gap:.5rem;
+      padding:.75rem 2rem;font-family:var(--font-body);
+      font-size:.8rem;font-weight:500;letter-spacing:.08em;
+      text-transform:uppercase;cursor:pointer;
+      transition:all .4s ease;border:none;
+    }
+    .btn-primary{
+      background:var(--text);color:var(--bg);
+      border:1px solid var(--text);
+    }
+    .btn-primary:hover{
+      background:transparent;color:var(--text);
+    }
+    .btn-outline{
+      background:transparent;color:var(--text);
+      border:1px solid var(--border);
+    }
+    .btn-outline:hover{
+      border-color:var(--text);
+    }
+
+    /* ─── SECTION COMMON ─── */
+    section{padding:7rem 3rem}
+    .container{max-width:1000px;margin:0 auto}
+    .section-label{
+      font-family:var(--font-body);
+      font-size:.7rem;font-weight:500;
+      letter-spacing:.15em;text-transform:uppercase;
+      color:var(--text-tertiary);
+      margin-bottom:1.5rem;display:block;
+    }
+    .section-title{
+      font-family:var(--font-display);
+      font-size:clamp(2rem,4vw,3.2rem);
+      font-weight:300;letter-spacing:-.01em;
+      line-height:1.15;margin-bottom:1rem;
+    }
+    .section-desc{
+      color:var(--text-secondary);font-size:.95rem;
+      font-weight:300;max-width:520px;
+      margin-bottom:4rem;line-height:1.8;
+    }
+    .divider{
+      width:40px;height:1px;background:var(--border);
+      margin-bottom:2rem;
+    }
+
+    /* ─── ABOUT ─── */
+    .about-grid{
+      display:grid;grid-template-columns:1fr 1.2fr;gap:6rem;align-items:start;
+    }
+    .about-image{
+      aspect-ratio:3/4;position:relative;
+    }
+    .about-image-placeholder{
+      width:100%;height:100%;
+      background:var(--bg-warm);
+      display:flex;align-items:center;justify-content:center;
+    }
+    .about-image::after{
+      content:'';position:absolute;inset:-8px;
+      border:1px solid var(--border-light);
+      pointer-events:none;
+    }
+    .about-text p{
+      color:var(--text-secondary);font-size:.92rem;
+      font-weight:300;line-height:1.9;margin-bottom:1.2rem;
+    }
+    .about-stats{
+      display:flex;gap:3rem;margin-top:3rem;
+      padding-top:2rem;border-top:1px solid var(--border-light);
+    }
+    .stat-number{
+      font-family:var(--font-display);
+      font-size:2.5rem;font-weight:300;
+      color:var(--text);line-height:1;
+    }
+    .stat-label{
+      font-size:.72rem;font-weight:500;
+      color:var(--text-tertiary);
+      letter-spacing:.06em;text-transform:uppercase;
+      margin-top:.4rem;
+    }
+
+    /* ─── EXPERIENCE ─── */
+    .experience-list{display:flex;flex-direction:column}
+    .exp-card{
+      display:grid;grid-template-columns:180px 1fr;gap:3rem;
+      padding:2.5rem 0;
+      border-bottom:1px solid var(--border-light);
+    }
+    .exp-card:first-child{border-top:1px solid var(--border-light)}
+    .exp-meta{
+      font-size:.78rem;color:var(--text-tertiary);
+      font-weight:400;letter-spacing:.03em;
+    }
+    .exp-company{
+      font-family:var(--font-display);
+      font-size:1rem;font-weight:400;
+      color:var(--text);margin-top:.3rem;
+    }
+    .exp-role{
+      font-family:var(--font-display);
+      font-size:1.3rem;font-weight:400;
+      color:var(--text);margin-bottom:.6rem;
+    }
+    .exp-desc{
+      color:var(--text-secondary);font-size:.88rem;
+      font-weight:300;line-height:1.8;
+    }
+    .exp-tags{display:flex;gap:.6rem;flex-wrap:wrap;margin-top:1rem}
+    .exp-tag{
+      padding:.2rem .7rem;font-size:.68rem;font-weight:500;
+      letter-spacing:.04em;
+      color:var(--text-secondary);
+      border:1px solid var(--border-light);
+    }
+
+    /* ─── SKILLS ─── */
+    .skills-grid{
+      display:grid;grid-template-columns:repeat(3,1fr);gap:1px;
+      background:var(--border-light);
+      border:1px solid var(--border-light);
+    }
+    .skill-card{
+      padding:2.5rem 2rem;background:var(--bg);
+      transition:background .4s;
+    }
+    .skill-card:hover{background:var(--surface)}
+    .skill-card h3{
+      font-family:var(--font-display);
+      font-size:1.2rem;font-weight:400;
+      margin-bottom:.8rem;
+    }
+    .skill-card p{
+      font-size:.82rem;color:var(--text-secondary);
+      font-weight:300;line-height:1.8;
+      margin-bottom:1rem;
+    }
+    .skill-items{display:flex;flex-wrap:wrap;gap:.4rem}
+    .skill-item{
+      font-size:.68rem;font-weight:400;
+      color:var(--text-tertiary);letter-spacing:.03em;
+    }
+    .skill-item:not(:last-child)::after{
+      content:' · ';color:var(--border);
+    }
+
+    /* ─── PROJECTS ─── */
+    .projects-list{display:flex;flex-direction:column}
+    .project-card{
+      display:grid;grid-template-columns:1fr 1fr;
+      border-top:1px solid var(--border-light);
+      transition:background .4s;
+    }
+    .project-card:last-child{border-bottom:1px solid var(--border-light)}
+    .project-card:hover{background:var(--surface)}
+    .project-visual{
+      display:flex;align-items:center;justify-content:center;
+      font-size:3rem;padding:3rem 2rem;
+      background:var(--accent-faint);
+    }
+    .project-body{
+      padding:3rem 2.5rem;display:flex;flex-direction:column;justify-content:center;
+    }
+    .project-body h3{
+      font-family:var(--font-display);
+      font-size:1.4rem;font-weight:400;
+      margin-bottom:.8rem;
+    }
+    .project-body p{
+      font-size:.85rem;color:var(--text-secondary);
+      font-weight:300;line-height:1.8;margin-bottom:1.5rem;
+    }
+    .project-metrics{display:flex;gap:2rem}
+    .project-metric{font-size:.75rem;color:var(--text-tertiary)}
+    .project-metric strong{
+      display:block;font-family:var(--font-display);
+      font-size:1.4rem;font-weight:400;color:var(--text);
+    }
+
+    /* ─── PHILOSOPHY ─── */
+    .philosophy-grid{
+      display:grid;grid-template-columns:repeat(3,1fr);gap:4rem;
+    }
+    .philosophy-card{text-align:center}
+    .philosophy-num{
+      font-family:var(--font-display);
+      font-size:3rem;font-weight:300;
+      color:var(--border);line-height:1;
+      margin-bottom:1.2rem;
+    }
+    .philosophy-card h3{
+      font-family:var(--font-display);
+      font-size:1.2rem;font-weight:400;
+      margin-bottom:.8rem;
+    }
+    .philosophy-card p{
+      font-size:.82rem;color:var(--text-secondary);
+      font-weight:300;line-height:1.8;
+    }
+
+    /* ─── RESEARCH ─── */
+    .research-grid{display:flex;flex-direction:column}
+    .research-card{
+      display:grid;grid-template-columns:auto 1fr auto;gap:2rem;
+      align-items:center;
+      padding:2rem 0;
+      border-bottom:1px solid var(--border-light);
+      transition:padding-left .3s;
+    }
+    .research-card:first-child{border-top:1px solid var(--border-light)}
+    .research-card:hover{padding-left:1rem}
+    .research-num{
+      font-family:var(--font-display);
+      font-size:2rem;font-weight:300;
+      color:var(--border);width:40px;
+    }
+    .research-info h3{
+      font-family:var(--font-display);
+      font-size:1.15rem;font-weight:400;
+      margin-bottom:.3rem;
+    }
+    .research-info p{
+      font-size:.8rem;color:var(--text-secondary);
+      font-weight:300;line-height:1.6;
+    }
+    .research-tags{display:flex;gap:.5rem;margin-top:.5rem}
+    .research-tag{
+      font-size:.65rem;font-weight:500;
+      color:var(--text-tertiary);letter-spacing:.04em;
+    }
+    .research-arrow{
+      font-size:.85rem;color:var(--text-tertiary);
+      transition:transform .3s,color .3s;
+    }
+    .research-card:hover .research-arrow{
+      color:var(--text);transform:translateX(4px);
+    }
+
+    /* ─── CONTACT ─── */
+    .contact-section{text-align:center}
+    .contact-section .section-title{margin-bottom:1rem}
+    .contact-section .section-desc{
+      margin-left:auto;margin-right:auto;margin-bottom:3rem;
+    }
+    .contact-links{
+      display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;
+    }
+    .contact-link{
+      display:flex;align-items:center;gap:.5rem;
+      padding:.7rem 1.5rem;
+      font-size:.8rem;font-weight:500;
+      letter-spacing:.04em;
+      border:1px solid var(--border-light);
+      transition:all .3s;
+    }
+    .contact-link:hover{
+      border-color:var(--text);color:var(--text);
+    }
+
+    /* ─── FOOTER ─── */
+    footer{
+      padding:4rem 3rem;
+      border-top:1px solid var(--border-light);
+      display:flex;align-items:center;justify-content:space-between;
+    }
+    footer p{
+      color:var(--text-tertiary);font-size:.75rem;
+      letter-spacing:.04em;
+    }
+    .deerflow-mark{
+      font-size:.7rem;color:var(--text-tertiary);
+      letter-spacing:.08em;opacity:.6;
+      transition:opacity .3s;
+    }
+    .deerflow-mark:hover{opacity:1;color:var(--accent)}
+
+    /* ─── SCROLL REVEAL ─── */
+    .reveal{
+      opacity:0;transform:translateY(20px);
+      transition:opacity .8s cubic-bezier(.25,.46,.45,.94),
+                transform .8s cubic-bezier(.25,.46,.45,.94);
+    }
+    .reveal.visible{opacity:1;transform:translateY(0)}
+
+    /* ─── RESPONSIVE ─── */
+    @media(max-width:900px){
+      nav{padding:1rem 1.5rem}
+      nav.scrolled{padding:.7rem 1.5rem}
+      section{padding:5rem 1.5rem}
+      .hero{padding:0 1.5rem}
+      .about-grid{grid-template-columns:1fr;gap:3rem}
+      .about-image{max-width:300px}
+      .skills-grid{grid-template-columns:1fr}
+      .project-card{grid-template-columns:1fr}
+      .philosophy-grid{grid-template-columns:1fr;gap:2.5rem}
+      .exp-card{grid-template-columns:1fr;gap:1rem}
+      footer{flex-direction:column;gap:1rem;text-align:center}
+    }
+    @media(max-width:768px){
+      .nav-links{
+        position:fixed;top:0;right:-100%;width:70%;height:100vh;
+        flex-direction:column;background:var(--bg);
+        padding:5rem 2rem;transition:right .4s;gap:2rem;
+        border-left:1px solid var(--border-light);
+      }
+      .nav-links.open{right:0}
+      .hamburger{display:flex}
+      .hero h1{font-size:2.6rem}
+    }
+  </style>
+</head>
+<body>
+
+<nav id="nav">
+  <div class="nav-logo">Alex Chen</div>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="#about">About</a></li>
+    <li><a href="#experience">Experience</a></li>
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#projects">Work</a></li>
+    <li><a href="#research">Research</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <button class="hamburger" id="hamburger" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-content reveal">
+    <div class="hero-greeting">Product Manager</div>
+    <h1>
+      创造<em>卓越产品</em><br/>驱动用户增长
+    </h1>
+    <div class="hero-line"></div>
+    <p class="hero-desc">
+      8 年产品管理经验，专注于 AI 产品、用户增长与体验设计。<br/>
+      曾主导多款千万级用户产品从 0 到 1 的全流程。
+    </p>
+    <div class="hero-cta">
+      <a href="#projects" class="btn btn-primary">查看作品集</a>
+      <a href="#contact" class="btn btn-outline">联系我</a>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="container">
+    <div class="about-grid">
+      <div class="about-image reveal">
+        <div class="about-image-placeholder">
+          <svg width="100" height="100" viewBox="0 0 100 100" fill="none">
+            <circle cx="50" cy="36" r="18" fill="#6b7c6e" opacity=".2"/>
+            <ellipse cx="50" cy="80" rx="30" ry="18" fill="#6b7c6e" opacity=".12"/>
+          </svg>
+        </div>
+      </div>
+      <div class="reveal">
+        <span class="section-label">About</span>
+        <h2 class="section-title">数据驱动的<br/>产品思维</h2>
+        <div class="divider"></div>
+        <div class="about-text">
+          <p>
+            我是 Alex Chen，一名热爱技术与设计交叉领域的产品经理。从用户洞察到商业落地，
+            我擅长用数据驱动决策，以同理心设计产品。
+          </p>
+          <p>
+            在过去 8 年里，我在互联网头部公司负责过 AI 助手、内容社区、电商增长等多个方向，
+            积累了从 0-1 到规模化增长的完整经验。
+          </p>
+        </div>
+        <div class="about-stats">
+          <div>
+            <div class="stat-number">8+</div>
+            <div class="stat-label">Years Exp.</div>
+          </div>
+          <div>
+            <div class="stat-number">50M+</div>
+            <div class="stat-label">Users Served</div>
+          </div>
+          <div>
+            <div class="stat-number">12</div>
+            <div class="stat-label">Products</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- EXPERIENCE -->
+<section id="experience" style="background:var(--surface)">
+  <div class="container">
+    <span class="section-label reveal">Experience</span>
+    <h2 class="section-title reveal">职业旅程</h2>
+    <p class="section-desc reveal">在不同阶段的产品实践中，不断沉淀方法论与行业认知。</p>
+
+    <div class="experience-list">
+      <div class="exp-card reveal">
+        <div>
+          <div class="exp-meta">2023 — 至今</div>
+          <div class="exp-company">ByteDance</div>
+        </div>
+        <div>
+          <div class="exp-role">AI 产品高级经理</div>
+          <div class="exp-desc">
+            主导 AI 助手产品规划与落地，负责对话式 AI、多模态交互等核心功能。
+            DAU 从 50 万增长至 300 万，用户留存率提升 40%。
+          </div>
+          <div class="exp-tags">
+            <span class="exp-tag">AI / LLM</span>
+            <span class="exp-tag">用户增长</span>
+            <span class="exp-tag">产品策略</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="exp-card reveal">
+        <div>
+          <div class="exp-meta">2020 — 2023</div>
+          <div class="exp-company">Xiaohongshu</div>
+        </div>
+        <div>
+          <div class="exp-role">社区产品经理</div>
+          <div class="exp-desc">
+            负责内容社区的创作者生态与分发策略，设计了创作者激励体系与内容推荐优化方案。
+            创作者活跃度提升 60%，内容生产量翻倍。
+          </div>
+          <div class="exp-tags">
+            <span class="exp-tag">内容生态</span>
+            <span class="exp-tag">推荐算法</span>
+            <span class="exp-tag">创作者运营</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="exp-card reveal">
+        <div>
+          <div class="exp-meta">2018 — 2020</div>
+          <div class="exp-company">Alibaba</div>
+        </div>
+        <div>
+          <div class="exp-role">电商增长产品经理</div>
+          <div class="exp-desc">
+            主导电商平台增长策略，设计了新用户激活链路与复购体系。
+            新用户 7 日留存提升 25%，GMV 年增长 35%。
+          </div>
+          <div class="exp-tags">
+            <span class="exp-tag">增长黑客</span>
+            <span class="exp-tag">转化优化</span>
+            <span class="exp-tag">数据分析</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SKILLS -->
+<section id="skills">
+  <div class="container">
+    <span class="section-label reveal">Skills</span>
+    <h2 class="section-title reveal">核心能力</h2>
+    <p class="section-desc reveal">多维度的产品能力，支撑从洞察到落地的完整闭环。</p>
+
+    <div class="skills-grid reveal">
+      <div class="skill-card">
+        <h3>产品策略</h3>
+        <p>深度理解市场与用户，制定清晰的产品路线图，平衡商业目标与用户价值。</p>
+        <div class="skill-items">
+          <span class="skill-item">Market Analysis</span>
+          <span class="skill-item">Roadmap</span>
+          <span class="skill-item">OKR</span>
+          <span class="skill-item">竞品分析</span>
+        </div>
+      </div>
+      <div class="skill-card">
+        <h3>数据分析</h3>
+        <p>数据驱动决策，善用 AB 测试和漏斗分析发现增长杠杆。</p>
+        <div class="skill-items">
+          <span class="skill-item">SQL</span>
+          <span class="skill-item">A/B Testing</span>
+          <span class="skill-item">Python</span>
+          <span class="skill-item">Amplitude</span>
+        </div>
+      </div>
+      <div class="skill-card">
+        <h3>用户体验</h3>
+        <p>以同理心驱动设计，注重细节打磨与交互创新，追求极致的用户体验。</p>
+        <div class="skill-items">
+          <span class="skill-item">User Research</span>
+          <span class="skill-item">Figma</span>
+          <span class="skill-item">Prototyping</span>
+        </div>
+      </div>
+      <div class="skill-card">
+        <h3>增长策略</h3>
+        <p>构建增长飞轮，设计病毒传播机制与用户激活留存体系。</p>
+        <div class="skill-items">
+          <span class="skill-item">Growth Hacking</span>
+          <span class="skill-item">Retention</span>
+          <span class="skill-item">AARRR</span>
+        </div>
+      </div>
+      <div class="skill-card">
+        <h3>AI 产品</h3>
+        <p>深耕 AI 领域，理解大模型能力边界，设计人机协作的产品形态。</p>
+        <div class="skill-items">
+          <span class="skill-item">LLM</span>
+          <span class="skill-item">Prompt Engineering</span>
+          <span class="skill-item">RAG</span>
+          <span class="skill-item">Agent</span>
+        </div>
+      </div>
+      <div class="skill-card">
+        <h3>跨团队协作</h3>
+        <p>高效推动跨职能团队协作，对齐研发、设计、运营多方目标。</p>
+        <div class="skill-items">
+          <span class="skill-item">Scrum</span>
+          <span class="skill-item">PRD</span>
+          <span class="skill-item">Jira</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROJECTS -->
+<section id="projects" style="background:var(--surface)">
+  <div class="container">
+    <span class="section-label reveal">Selected Work</span>
+    <h2 class="section-title reveal">产品案例</h2>
+    <p class="section-desc reveal">从想法到落地，每个项目都是一段完整的产品故事。</p>
+
+    <div class="projects-list">
+      <div class="project-card reveal">
+        <div class="project-visual" style="background:rgba(107,124,110,.06)">🧠</div>
+        <div class="project-body">
+          <h3>AI 智能助手</h3>
+          <p>从 0 到 1 打造对话式 AI 助手，支持多轮对话、多模态输入、插件生态。累计服务超千万用户。</p>
+          <div class="project-metrics">
+            <div class="project-metric"><strong>300万</strong>DAU</div>
+            <div class="project-metric"><strong>40%</strong>留存提升</div>
+            <div class="project-metric"><strong>4.8</strong>App 评分</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="project-card reveal">
+        <div class="project-body">
+          <h3>创作者生态平台</h3>
+          <p>设计创作者成长体系与分层激励机制，构建内容创作-分发-变现的完整闭环。</p>
+          <div class="project-metrics">
+            <div class="project-metric"><strong>60%</strong>活跃提升</div>
+            <div class="project-metric"><strong>2x</strong>内容产量</div>
+            <div class="project-metric"><strong>85%</strong>满意度</div>
+          </div>
+        </div>
+        <div class="project-visual" style="background:rgba(107,124,110,.04)">🎨</div>
+      </div>
+
+      <div class="project-card reveal">
+        <div class="project-visual" style="background:rgba(107,124,110,.06)">📈</div>
+        <div class="project-body">
+          <h3>电商增长引擎</h3>
+          <p>构建新用户激活链路，设计社交裂变与复购体系，实现 GMV 持续增长。</p>
+          <div class="project-metrics">
+            <div class="project-metric"><strong>25%</strong>留存提升</div>
+            <div class="project-metric"><strong>35%</strong>GMV 增长</div>
+            <div class="project-metric"><strong>3x</strong>分享率</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PHILOSOPHY -->
+<section id="philosophy">
+  <div class="container">
+    <div style="text-align:center;margin-bottom:4rem" class="reveal">
+      <span class="section-label">Philosophy</span>
+      <h2 class="section-title">我的信条</h2>
+    </div>
+
+    <div class="philosophy-grid">
+      <div class="philosophy-card reveal">
+        <div class="philosophy-num">一</div>
+        <h3>用户第一</h3>
+        <p>深入理解用户的真实需求，而非表面诉求。好的产品经理是用户的代言人。</p>
+      </div>
+      <div class="philosophy-card reveal">
+        <div class="philosophy-num">二</div>
+        <h3>数据说话</h3>
+        <p>直觉提出假设，数据验证结论。每一个决策都有数据支撑，但不被数据绑架。</p>
+      </div>
+      <div class="philosophy-card reveal">
+        <div class="philosophy-num">三</div>
+        <h3>快速迭代</h3>
+        <p>MVP 先行，小步快跑。在不确定性中快速学习，用最小成本验证最大假设。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- RESEARCH -->
+<section id="research" style="background:var(--surface)">
+  <div class="container">
+    <span class="section-label reveal">Deep Research</span>
+    <h2 class="section-title reveal">研究报告</h2>
+    <p class="section-desc reveal">以产品经理视角，对 AI 产品与工具进行系统性深度研究。覆盖 8 个品类、60+ 篇研究。</p>
+
+    <div class="research-grid">
+      <a href="report.html?file=hermes-agent.md" class="research-card reveal">
+        <div class="research-num">01</div>
+        <div class="research-info">
+          <h3>Hermes Agent 深度研究报告</h3>
+          <p>Nous Research 开源自改进 AI Agent 框架全面解析——技术架构、四层记忆系统、竞品格局。</p>
+          <div class="research-tags">
+            <span class="research-tag">AI Agent</span>
+            <span class="research-tag">· 开源</span>
+            <span class="research-tag">· 竞品分析</span>
+          </div>
+        </div>
+        <span class="research-arrow">→</span>
+      </a>
+
+      <a href="report.html?file=mem-ai.md" class="research-card reveal">
+        <div class="research-num">02</div>
+        <div class="research-info">
+          <h3>Mem AI 产品深度研究报告</h3>
+          <p>AI 原生个人知识管理工具全面拆解——产品功能、技术架构、商业模式与生存概率评估。</p>
+          <div class="research-tags">
+            <span class="research-tag">PKM</span>
+            <span class="research-tag">· AI Native</span>
+            <span class="research-tag">· 产品分析</span>
+          </div>
+        </div>
+        <span class="research-arrow">→</span>
+      </a>
+
+      <a href="report.html?file=claude-code-pm.md" class="research-card reveal">
+        <div class="research-num">03</div>
+        <div class="research-info">
+          <h3>Claude Code 提升 PM 效率研究</h3>
+          <p>系统研究 Claude Code 如何加速 PM 工作流——PRD 生成、竞品调研自动化、工作流设计。</p>
+          <div class="research-tags">
+            <span class="research-tag">AI 工具</span>
+            <span class="research-tag">· 效率提升</span>
+            <span class="research-tag">· 方法论</span>
+          </div>
+        </div>
+        <span class="research-arrow">→</span>
+      </a>
+    </div>
+
+    <div style="text-align:center;margin-top:3rem" class="reveal">
+      <a href="library.html" class="btn btn-outline">查看全部 60+ 篇研究 →</a>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact" class="contact-section">
+  <div class="container">
+    <span class="section-label reveal">Contact</span>
+    <h2 class="section-title reveal">一起聊聊？</h2>
+    <p class="section-desc reveal">
+      无论是产品合作、行业交流还是工作机会，欢迎随时联系我。
+    </p>
+    <div class="contact-links reveal">
+      <a href="mailto:alex.chen@example.com" class="contact-link">✉ alex.chen@example.com</a>
+      <a href="https://linkedin.com" target="_blank" class="contact-link">LinkedIn</a>
+      <a href="https://twitter.com" target="_blank" class="contact-link">Twitter / X</a>
+      <a href="https://github.com" target="_blank" class="contact-link">GitHub</a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <p>© 2026 Alex Chen</p>
+  <a href="https://deerflow.tech" target="_blank" class="deerflow-mark" title="Created by Deerflow">DEERFLOW</a>
+</footer>
+
+<script>
+  const nav = document.getElementById('nav');
+  window.addEventListener('scroll', () => {
+    nav.classList.toggle('scrolled', window.scrollY > 50);
+  });
+
+  const hamburger = document.getElementById('hamburger');
+  const navLinks = document.getElementById('navLinks');
+  hamburger.addEventListener('click', () => navLinks.classList.toggle('open'));
+  navLinks.querySelectorAll('a').forEach(link => {
+    link.addEventListener('click', () => navLinks.classList.remove('open'));
+  });
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) entry.target.classList.add('visible');
+    });
+  }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+  const statObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const el = entry.target;
+        const text = el.textContent;
+        const match = text.match(/^(\d+)/);
+        if (match) {
+          const target = parseInt(match[1]);
+          const suffix = text.replace(match[1], '');
+          let current = 0;
+          const step = Math.ceil(target / 50);
+          const timer = setInterval(() => {
+            current += step;
+            if (current >= target) { current = target; clearInterval(timer); }
+            el.textContent = current + suffix;
+          }, 25);
+        }
+        statObserver.unobserve(el);
+      }
+    });
+  }, { threshold: 0.5 });
+  document.querySelectorAll('.stat-number').forEach(el => statObserver.observe(el));
+</script>
+</body>
+</html>

@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>研究资料库 — Alex Chen</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Karla:wght@300;400;500;600&family=Noto+Serif+SC:wght@300;400;600&family=Noto+Sans+SC:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+    :root{
+      --bg:#f7f5f0;
+      --bg-warm:#f2efe8;
+      --surface:#ffffff;
+      --surface-muted:#ece9e1;
+      --border:#ddd8ce;
+      --border-light:#eae6de;
+      --text:#2c2a25;
+      --text-secondary:#8a847a;
+      --text-tertiary:#b5afa5;
+      --accent:#6b7c6e;
+      --accent-light:#8a9b8d;
+      --accent-faint:rgba(107,124,110,.08);
+      --radius:6px;
+      --font-display:'Cormorant Garamond','Noto Serif SC',Georgia,serif;
+      --font-body:'Karla','Noto Sans SC',system-ui,sans-serif;
+    }
+    html{scroll-behavior:smooth;font-size:16px}
+    body{
+      font-family:var(--font-body);
+      background:var(--bg);color:var(--text);
+      line-height:1.75;font-weight:400;
+      -webkit-font-smoothing:antialiased;
+    }
+    a{color:inherit;text-decoration:none}
+    ::selection{background:var(--accent);color:#fff}
+
+    nav{
+      position:fixed;top:0;left:0;right:0;z-index:100;
+      padding:1.2rem 3rem;
+      background:rgba(247,245,240,.88);
+      backdrop-filter:blur(24px) saturate(1.2);
+      border-bottom:1px solid var(--border-light);
+      display:flex;align-items:center;justify-content:space-between;
+    }
+    .nav-logo{
+      font-family:var(--font-display);
+      font-size:1.3rem;font-weight:400;letter-spacing:.02em;
+    }
+    .nav-logo a{color:inherit;text-decoration:none}
+    .nav-back{
+      font-size:.78rem;font-weight:500;color:var(--text-secondary);
+      letter-spacing:.06em;text-transform:uppercase;
+      transition:color .3s;
+    }
+    .nav-back:hover{color:var(--text)}
+
+    .page-header{
+      padding:8rem 3rem 3rem;text-align:center;
+      max-width:680px;margin:0 auto;
+    }
+    .page-header .section-label{
+      font-family:var(--font-body);
+      font-size:.7rem;font-weight:500;
+      letter-spacing:.15em;text-transform:uppercase;
+      color:var(--text-tertiary);margin-bottom:1.5rem;display:block;
+    }
+    .page-header h1{
+      font-family:var(--font-display);
+      font-size:clamp(2.2rem,5vw,3.5rem);
+      font-weight:300;letter-spacing:-.01em;
+      line-height:1.15;margin-bottom:1rem;
+    }
+    .page-header h1 em{font-style:italic;color:var(--accent)}
+    .page-header p{
+      color:var(--text-secondary);font-size:.95rem;
+      font-weight:300;line-height:1.8;
+      max-width:520px;margin:0 auto;
+    }
+    .stats-row{
+      display:flex;gap:2.5rem;justify-content:center;margin-top:2rem;
+    }
+    .stat-pill{
+      font-size:.78rem;color:var(--text-secondary);font-weight:300;
+    }
+    .stat-pill strong{
+      font-family:var(--font-display);
+      font-size:1.3rem;font-weight:400;
+      color:var(--text);display:block;
+      line-height:1.2;margin-bottom:.15rem;
+    }
+
+    .container{max-width:1000px;margin:0 auto;padding:0 3rem 5rem}
+
+    .filter-bar{
+      display:flex;gap:.5rem;flex-wrap:wrap;
+      margin-bottom:3rem;
+      position:sticky;top:56px;z-index:50;
+      background:var(--bg);padding:1.2rem 0;
+    }
+    .filter-btn{
+      padding:.35rem .9rem;font-size:.72rem;font-weight:500;
+      letter-spacing:.04em;
+      background:transparent;border:1px solid var(--border-light);
+      color:var(--text-secondary);cursor:pointer;
+      transition:all .3s;font-family:var(--font-body);
+    }
+    .filter-btn:hover,.filter-btn.active{
+      border-color:var(--text);color:var(--text);
+    }
+
+    .category-section{margin-bottom:3.5rem}
+    .category-header{
+      display:flex;align-items:baseline;gap:.8rem;
+      margin-bottom:1.2rem;
+      padding-bottom:.8rem;border-bottom:1px solid var(--border-light);
+    }
+    .category-name{
+      font-family:var(--font-display);
+      font-size:1.3rem;font-weight:400;
+    }
+    .category-count{
+      font-size:.7rem;font-weight:500;
+      color:var(--text-tertiary);letter-spacing:.04em;
+    }
+
+    .report-list{
+      display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1px;
+      background:var(--border-light);border:1px solid var(--border-light);
+    }
+    .report-item{
+      display:flex;align-items:flex-start;gap:1rem;
+      padding:1.3rem 1.5rem;background:var(--bg);
+      transition:background .3s,padding-left .3s;
+    }
+    .report-item:hover{
+      background:var(--surface);padding-left:2rem;
+    }
+    .report-info{flex:1;min-width:0}
+    .report-info h3{
+      font-family:var(--font-display);
+      font-size:1rem;font-weight:400;
+      margin-bottom:.25rem;
+      white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+    }
+    .report-info p{
+      font-size:.72rem;color:var(--text-secondary);
+      font-weight:300;
+      display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;
+      overflow:hidden;line-height:1.6;
+    }
+    .report-arrow{
+      color:var(--text-tertiary);font-size:.8rem;flex-shrink:0;
+      margin-top:.15rem;transition:transform .3s,color .3s;
+    }
+    .report-item:hover .report-arrow{color:var(--text);transform:translateX(3px)}
+
+    footer{
+      padding:4rem 3rem;border-top:1px solid var(--border-light);
+      display:flex;align-items:center;justify-content:space-between;
+    }
+    footer p{color:var(--text-tertiary);font-size:.75rem;letter-spacing:.04em}
+    .deerflow-mark{
+      font-size:.7rem;color:var(--text-tertiary);
+      letter-spacing:.08em;opacity:.6;transition:opacity .3s;
+    }
+    .deerflow-mark:hover{opacity:1;color:var(--accent)}
+
+    @media(max-width:768px){
+      nav{padding:1rem 1.5rem}
+      .page-header{padding:6rem 1.5rem 2rem}
+      .container{padding:0 1.5rem 3rem}
+      .report-list{grid-template-columns:1fr}
+      .stats-row{gap:1.5rem;flex-wrap:wrap}
+      footer{flex-direction:column;gap:1rem;text-align:center}
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo"><a href="index.html">Alex Chen</a></div>
+  <a href="index.html#research" class="nav-back">← Back</a>
+</nav>
+
+<header class="page-header">
+  <span class="section-label">Research Library</span>
+  <h1>AI 产品<em>研究资料库</em></h1>
+  <p>以产品经理视角，系统性研究全球 AI 产品生态——覆盖 8 个品类、60+ 篇深度研究。</p>
+  <div class="stats-row">
+    <div class="stat-pill"><strong>60+</strong>篇研究</div>
+    <div class="stat-pill"><strong>40+</strong>款产品</div>
+    <div class="stat-pill"><strong>8</strong>个品类</div>
+  </div>
+</header>
+
+<main class="container">
+  <div class="filter-bar" id="filterBar">
+    <button class="filter-btn active" data-filter="all">全部</button>
+    <button class="filter-btn" data-filter="通用助手">通用助手</button>
+    <button class="filter-btn" data-filter="编程与构建">编程与构建</button>
+    <button class="filter-btn" data-filter="搜索与研究">搜索与研究</button>
+    <button class="filter-btn" data-filter="工作与协作">工作与协作</button>
+    <button class="filter-btn" data-filter="视频与数字人">视频与数字人</button>
+    <button class="filter-btn" data-filter="设计与内容">设计与内容</button>
+    <button class="filter-btn" data-filter="语音与音频">语音与音频</button>
+    <button class="filter-btn" data-filter="角色与陪伴">角色与陪伴</button>
+    <button class="filter-btn" data-filter="品类对比">品类对比</button>
+    <button class="filter-btn" data-filter="厂商">厂商研究</button>
+    <button class="filter-btn" data-filter="支付产品">支付产品</button>
+    <button class="filter-btn" data-filter="深度研究">深度研究</button>
+    <button class="filter-btn" data-filter="清单">研究清单</button>
+  </div>
+
+  <div id="categories">
+
+    <!-- 深度研究 -->
+    <section class="category-section" data-category="深度研究">
+      <div class="category-header">
+        <span class="category-name">深度研究报告</span>
+        <span class="category-count">7 篇</span>
+      </div>
+      <div class="report-list">
+        <a href="report.html?file=hermes-agent.md" class="report-item">
+          <div class="report-info"><h3>Hermes Agent 深度研究</h3><p>开源自改进 AI Agent 框架全面解析，技术架构、竞品格局与商业评估</p></div>
+          <span class="report-arrow">→</span>
+        </a>
+        <a href="report.html?file=mem-ai.md" class="report-item">
+          <div class="report-info"><h3>Mem AI 产品深度研究</h3><p>AI 原生知识管理工具拆解——功能、技术、商业模式与生存评估</p></div>
+          <span class="report-arrow">→</span>
+        </a>
+        <a href="report.html?file=claude-code-pm.md" class="report-item">
+          <div class="report-info"><h3>Claude Code PM 效率提升</h3><p>系统研究 Claude Code 加速 PM 工作流的方法论与研究计划</p></div>
+          <span class="report-arrow">→</span>
+        </a>
+        <a href="report.html?file=library/深度研究/Claude-Code-PM效率提升-完整研究报告.md" class="report-item">
+          <div class="report-info"><h3>Claude Code PM 完整研究报告</h3><p>PM 效率提升完整版报告——核心能力、场景适配、工作流模板</p></div>
+          <span class="report-arrow">→</span>
+        </a>
+        <a href="report.html?file=library/深度研究/Claude-Code-PM-速查卡.md" class="report-item">
+          <div class="report-info"><h3>Claude Code PM 速查卡</h3><p>PM 场景快速参考卡片，核心功能与工作流速览</p></div>
+          <span class="report-arrow">→</span>
+        </a>
+        <a href="report.html?file=library/深度研究/research_hermes_agent_20260409.md" class="report-item">
+          <div class="report-info"><h3>Hermes Agent GitHub 深度研究</h3><p>基于 GitHub 数据的 Hermes Agent 开源生态深度分析</p></div>
+          <span class="report-arrow">→</span>
+        </a>
+        <a href="report.html?file=library/深度研究/研究素材来源索引.md" class="report-item">
+          <div class="report-info"><h3>研究素材来源索引</h3><p>深度研究使用的全部参考资料与信息来源汇总</p></div>
+          <span class="report-arrow">→</span>
+        </a>
+      </div>
+    </section>
+
+    <!-- 通用助手 -->
+    <section class="category-section" data-category="通用助手">
+      <div class="category-header">
+        <span class="category-name">通用助手</span>
+        <span class="category-count">6 篇</span>
+      </div>
+      <div class="report-list">
+        <a href="report.html?file=library/产品/通用助手/ChatGPT.md" class="report-item">
+          <div class="report-info"><h3>ChatGPT</h3><p>OpenAI 对话式通用 AI 助手深度研究</p></div>
+          <span class="report-arrow">→</span>
+        </a>
+        <a href="report.html?file=library/产品/通用助手/Claude.md" class="report-item">
+          <div class="report-info"><h3>Claude</h3><p>Anthropic 高可靠长上下文 AI 助手研究</p></div>
+          <span class="report-arrow">→</span>
+        </a>
+        <a href="report.html?file=library/产品/通用助手/Gemini.md" class="report-item">
+          <div class="report-info"><h3>Gemini</h3><p>Google 搜索+生成一体 AI 助手研究</p></div>
+          <span class="report-arrow">→</span>
+        </a>
+        <a href="report.html?file=library/产品/通用助手/Le Chat.md" class="report-item">
+          <div class="report-info"><h3>Le Chat</h3><p>Mistral AI 对话助手产品研究</p></div>
+          <span class="report-arrow">→</span>
+        </a>
+        <a href="report.html?file=library/产品/通用助手/Meta AI.md" class="report-item">
+          <div class="report-info"><h3>Meta AI</h3><p>Meta 社交平台内嵌 AI 助手研究</p></div>
+          <span class="report-arrow">→</span>
+        </a>
+        <a href="report.html?file=library/产品/通用助手/问小白.md" class="report-item">
+          <div class="report-info"><h3>问小白</h3><p>国产通用 AI 助手产品研究</p></div>
+          <span class="report-arrow">→</span>
+        </a>
+      </div>
+    </section>
+
+    <!-- 编程与构建 -->
+    <section class="category-section" data-category="编程与构建">
+      <div class="category-header">
+        <span class="category-name">编程与构建</span>
+        <span class="category-count">12 篇</span>
+      </div>
+      <div class="report-list">
+        <a href="report.html?file=library/产品/编程与构建/Claude Code.md" class="report-item">
+          <div class="report-info"><h3>Claude Code</h3><p>Anthropic 终端编程工具深度研究</p></div>
+          <span class="report-arrow">→</span>
+        </a>
+        <a href="report.html?file=library/产品/编程与构建/Claude Cowork.md" class="report-item">
+          <div class="report-info"><h3>Claude Cowork</h3><p>Anthropic 协作式编程产品研究</p></div>
+          <span class="report-arrow">→</span>
+        </a>
+        <a href="report.html?file=library/产品/编程与构建/Cursor.md" class="report-item">
+          <div class="report-info"><h3>Cursor</h3><p>AI 原生 IDE 产品研究</p></div>
+          <span class="report-arrow">→</span>
+        </a>
+        <a href="report.html?file=library/产品/编程与构建/GitHub Copilot.md" class="report-item">
+          <div class="report-info"><h3>GitHub Copilot</h3><p>GitHub AI 编程助手产品研究</p></div>
+          <span class="report-arrow">→</span>
+        </a>
+        <a href="report.html?file=library/产品/编程与构建/Hermes Agent.md" class="report-item">
+          <div class="report-info"><h3>Hermes Agent</h3><p>自进化 AI Agent 框架产品研究</p></div>
+          <span class="report-arrow">→</span>
+        </a>
+        <a href="report.html?file=library/产品/编程与构建/Windsurf.md" class="report-item">
+          <div class="report-info"><h3>Windsurf</h3><p>Codeium AI IDE 产品研究</p></div>
+          <span class="report-arrow">→</span>
+        </a>
+        <a href="report.html?file=library/产品/编程与构建/Replit.md" class="report-item">
+          <div class="report-info"><h3>Replit</h3><p>云端 AI 开发平台产品研究</p></div>
+          <span class="report-arrow">→</span>
+        </a>
+        <a href="report.html?file=library/产品/编程与构建/Page Agent.md" class="report-item">
+          <div class="report-info"><h3>Page Agent</h3><p>浏览器自动化 Agent 产品研究</p></div>
+          <span class="report-arrow">→</span>
+        </a>
+        <a href="report.html?file=library/产品/编程与构建/Anthropic Claude API 与 Console.md" class="report-item">
+          <div class="report-info"><h3>Anthropic Claude API</h3><p>Anthropic 开发者平台与 API 研究</p></div>
+          <span class="report-arrow">→</span>
+        </a>
+        <a href="report.html?file=library/产品/编程与构建/OpenAI API 与开发者平台.md" class="report-item">
+          <div class="report-info"><h3>OpenAI API 与开发者平台</h3><p>OpenAI 开发者工具与 API 研究</p></div>
+          <span class="report-arrow">→</span>
+        </a>
+        <a href="report.html?file=library/产品/编程与构建/OpenAI Codex.md" class="report-item">
+          <div class="report-info"><h3>OpenAI Codex</h3><p>OpenAI 云端编程 Agent 研究</p></div>
+          <span class="report-arrow">→</span>
+        </a>
+        <a href="report.html?file=library/产品/编程与构建/OpenAI Operator 与计算机使用代理.md" class="report-item">
+          <div class="report-info"><h3>OpenAI Operator</h3><p>计算机使用代理与浏览器自动化研究</p></div>
+          <span class="report-arrow">→</span>
+        </a>
+      </div>
+    </section>
+
+    <!-- 搜索与研究 -->
+    <section class="category-section" data-category="搜索与研究">
+      <div class="category-header">
+        <span class="category-name">搜索与研究</span>
+        <span class="category-count">7 篇</span>
+      </div>
+      <div class="report-list">
+        <a href="report.html?file=library/产品/搜索与研究/Perplexity.md" class="report-item">
+          <div class="report-info"><h3>Perplexity</h3><p>AI 搜索引擎深度研究</p></div>
+          <span class="report-arrow">→</span>
+        </a>
+        <a href="report.html?file=library/产品/搜索与研究/Perplexity-产品体验报告-2026-03-26.md" class="report-item">
+          <div class="report-info"><h3>Perplexity 产品体验报告</h3><p>2026-03-26 一手体验评测</p></div>
+          <span class="report-arrow">→</span>
+        </a>
+        <a href="report.html?file=library/产品/搜索与研究/NotebookLM.md" class="report-item">
+          <div class="report-info"><h3>NotebookLM</h3><p>Google AI 笔记研究工具产品研究</p></div>
+          <span class="report-arrow">→</span>
+        </a>
+        <a href="report.html?file=library/产品/搜索与研究/Consensus.md" class="report-item">
+          <div class="report-info"><h3>Consensus</h3><p>AI 学术搜索引擎产品研究</p></div>
+          <span class="report-arrow">→</span>
+        </a>
+        <a href="report.html?file=library/产品/搜索与研究/Glean.md" class="report-item">
+          <div class="report-info"><h3>Glean</h3><p>企业 AI 搜索平台产品研究</p></div>
+          <span class="report-arrow">→</span>
+        </a>
+        <a href="report.html?file=library/产品/搜索与研究/Phind.md" class="report-item">
+          <div class="report-info"><h3>Phind</h3><p>开发者 AI 搜索引擎产品研究</p></div>
+          <span class="report-arrow">→</span>
+        </a>
+        <a href="report.html?file=library/产品/搜索与研究/You.com.md" class="report-item">
+          <div class="report-info"><h3>You.com</h3><p>AI 搜索与生产力平台产品研究</p></div>
+          <span class="report-arrow">→</span>
+        </a>
+      </div>
+    </section>
+
+    <!-- 工作与协作 -->
+    <section class="category-section" data-category="工作与协作">
+      <div class="category-header">
+        <span class="category-name">工作与协作</span>
+        <span class="category-count">8 篇</span>
+      </div>
+      <div class="report-list">
+        <a href="report.html?file=library/产品/工作与协作/Notion AI.md" class="report-item">
+          <div class="report-info"><h3>Notion AI</h3><p>全能协作工作区 AI 能力研究</p></div>
+          <span class="report-arrow">→</span>
+        </a>
+        <a href="report.html?file=library/产品/工作与协作/Obsidian.md" class="report-item">
+          <div class="report-info"><h3>Obsidian</h3><p>本地优先知识图谱工具研究</p></div>
+          <span class="report-arrow">→</span>
+        </a>
+        <a href="report.html?file=library/产品/工作与协作/Mem.md" class="report-item">
+          <div class="report-info"><h3>Mem</h3><p>AI 原生个人知识管理工具研究</p></div>
+          <span class="report-arrow">→</span>
+        </a>
+        <a href="report.html?file=library/产品/工作与协作/Microsoft Copilot.md" class="report-item">
+          <div class="report-info"><h3>Microsoft Copilot</h3><p>微软 AI 助手产品研究</p></div>
+          <span class="report-arrow">→</span>
+        </a>
+        <a href="report.html?file=library/产品/工作与协作/Microsoft Copilot-产品体验报告-2026-03-26.md" class="report-item">
+          <div class="report-info"><h3>Microsoft Copilot 体验报告</h3><p>2026-03-26 一手体验评测</p></div>
+          <span class="report-arrow">→</span>
+        </a>
+        <a href="report.html?file=library/产品/工作与协作/Moltbook.md" class="report-item">
+          <div class="report-info"><h3>Moltbook</h3><p>AI 协作工具产品研究</p></div>
+          <span class="report-arrow">→</span>
+        </a>
+        <a href="report.html?file=library/产品/工作与协作/扣子 Agent World.md" class="report-item">
+          <div class="report-info"><h3>扣子 Agent World</h3><p>字节跳动 Agent 平台产品研究</p></div>
+          <span class="report-arrow">→</span>
+        </a>
+        <a href="report.html?file=library/产品/工作与协作/扣子 Agent World-Agent Economy 战略研判.md" class="report-item">
+          <div class="report-info"><h3>扣子 Agent Economy 战略研判</h3><p>Agent 经济战略分析报告</p></div>
+          <span class="report-arrow">→</span>
+        </a>
+      </div>
+    </section>
+
+    <!-- 视频与数字人 -->
+    <section class="category-section" data-category="视频与数字人">
+      <div class="category-header">
+        <span class="category-name">视频与数字人</span>
+        <span class="category-count">4 篇</span>
+      </div>
+      <div class="report-list">
+        <a href="report.html?file=library/产品/视频与数字人/Sora.md" class="report-item">
+          <div class="report-info"><h3>Sora</h3><p>OpenAI 视频生成模型产品研究</p></div>
+          <span class="report-arrow">→</span>
+        </a>
+        <a href="report.html?file=library/产品/视频与数字人/Runway.md" class="report-item">
+          <div class="report-info"><h3>Runway</h3><p>AI 视频创作平台产品研究</p></div>
+          <span class="report-arrow">→</span>
+        </a>
+        <a href="report.html?file=library/产品/视频与数字人/Pika.md" class="report-item">
+          <div class="report-info"><h3>Pika</h3><p>AI 视频生成工具产品研究</p></div>
+          <span class="report-arrow">→</span>
+        </a>
+        <a href="report.html?file=library/产品/视频与数字人/HeyGen.md" class="report-item">
+          <div class="report-info"><h3>HeyGen</h3><p>AI 数字人视频平台产品研究</p></div>
+          <span class="report-arrow">→</span>
+        </a>
+      </div>
+    </section>
+
+    <!-- 设计与内容 -->
+    <section class="category-section" data-category="设计与内容">
+      <div class="category-header">
+        <span class="category-name">设计与内容</span>
+        <span class="category-count">3 篇</span>
+      </div>
+      <div class="report-list">
+        <a href="report.html?file=library/产品/设计与内容/Midjourney.md" class="report-item">
+          <div class="report-info"><h3>Midjourney</h3><p>AI 图像生成平台产品研究</p></div>
+          <span class="report-arrow">→</span>
+        </a>
+        <a href="report.html?file=library/产品/设计与内容/Adobe Firefly.md" class="report-item">
+          <div class="report-info"><h3>Adobe Firefly</h3><p>Adobe AI 创意工具产品研究</p></div>
+          <span class="report-arrow">→</span>
+        </a>
+        <a href="report.html?file=library/产品/设计与内容/Gamma.md" class="report-item">
+          <div class="report-info"><h3>Gamma</h3><p>AI 演示文稿工具产品研究</p></div>
+          <span class="report-arrow">→</span>
+        </a>
+      </div>
+    </section>
+
+    <!-- 语音与音频 -->
+    <section class="category-section" data-category="语音与音频">
+      <div class="category-header">
+        <span class="category-name">语音与音频</span>
+        <span class="category-count">1 篇</span>
+      </div>
+      <div class="report-list">
+        <a href="report.html?file=library/产品/语音与音频/ElevenLabs.md" class="report-item">
+          <div class="report-info"><h3>ElevenLabs</h3><p>AI 语音合成平台产品研究</p></div>
+          <span class="report-arrow">→</span>
+        </a>
+      </div>
+    </section>
+
+    <!-- 角色与陪伴 -->
+    <section class="category-section" data-category="角色与陪伴">
+      <div class="category-header">
+        <span class="category-name">角色与陪伴</span>
+        <span class="category-count">1 篇</span>
+      </div>
+      <div class="report-list">
+        <a href="report.html?file=library/产品/角色与陪伴/Character.AI.md" class="report-item">
+          <div class="report-info"><h3>Character.AI</h3><p>AI 角色对话与陪伴平台产品研究</p></div>
+          <span class="report-arrow">→</span>
+        </a>
+      </div>
+    </section>
+
+    <!-- 品类对比 -->
+    <section class="category-section" data-category="品类对比">
+      <div class="category-header">
+        <span class="category-name">品类对比矩阵</span>
+        <span class="category-count">6 篇</span>
+      </div>
+      <div class="report-list">
+        <a href="report.html?file=library/品类/通用助手-对比矩阵.md" class="report-item">
+          <div class="report-info"><h3>通用助手对比矩阵</h3><p>ChatGPT vs Claude vs Gemini 多维对比</p></div>
+          <span class="report-arrow">→</span>
+        </a>
+        <a href="report.html?file=library/品类/编程工具-对比矩阵.md" class="report-item">
+          <div class="report-info"><h3>编程工具对比矩阵</h3><p>AI 编程工具赛道全面对比</p></div>
+          <span class="report-arrow">→</span>
+        </a>
+        <a href="report.html?file=library/品类/搜索与研究-对比矩阵.md" class="report-item">
+          <div class="report-info"><h3>搜索与研究对比矩阵</h3><p>AI 搜索引擎赛道多维对比</p></div>
+          <span class="report-arrow">→</span>
+        </a>
+        <a href="report.html?file=library/品类/企业与工作流-对比矩阵.md" class="report-item">
+          <div class="report-info"><h3>企业与工作流对比矩阵</h3><p>企业级 AI 工具赛道对比</p></div>
+          <span class="report-arrow">→</span>
+        </a>
+        <a href="report.html?file=library/品类/编码与桌面代理系统-Claude Code-Codex-Cowork-对比.md" class="report-item">
+          <div class="report-info"><h3>编码与桌面代理系统对比</h3><p>Claude Code / Codex / Cowork 横向对比</p></div>
+          <span class="report-arrow">→</span>
+        </a>
+        <a href="report.html?file=library/品类/Claude系列-多入口与适用场景总览.md" class="report-item">
+          <div class="report-info"><h3>Claude 系列产品总览</h3><p>Claude 多入口与适用场景全景梳理</p></div>
+          <span class="report-arrow">→</span>
+        </a>
+      </div>
+    </section>
+
+    <!-- 厂商 -->
+    <section class="category-section" data-category="厂商">
+      <div class="category-header">
+        <span class="category-name">厂商研究</span>
+        <span class="category-count">2 篇</span>
+      </div>
+      <div class="report-list">
+        <a href="report.html?file=library/厂商/Claude与Anthropic-官方文档与资源导航.md" class="report-item">
+          <div class="report-info"><h3>Claude & Anthropic 资源导航</h3><p>Anthropic 官方文档与开发者资源索引</p></div>
+          <span class="report-arrow">→</span>
+        </a>
+        <a href="report.html?file=library/厂商/OpenAI与Anthropic-产品调研清单.md" class="report-item">
+          <div class="report-info"><h3>OpenAI & Anthropic 调研清单</h3><p>双巨头产品线调研与对比清单</p></div>
+          <span class="report-arrow">→</span>
+        </a>
+      </div>
+    </section>
+
+    <!-- 支付产品 -->
+    <section class="category-section" data-category="支付产品">
+      <div class="category-header">
+        <span class="category-name">支付产品</span>
+        <span class="category-count">4 篇</span>
+      </div>
+      <div class="report-list">
+        <a href="report.html?file=library/支付产品/腾讯米大师 Midas.md" class="report-item">
+          <div class="report-info"><h3>腾讯米大师 Midas</h3><p>腾讯支付中台产品研究</p></div>
+          <span class="report-arrow">→</span>
+        </a>
+        <a href="report.html?file=library/支付产品/ClawCloud.md" class="report-item">
+          <div class="report-info"><h3>ClawCloud</h3><p>云计费平台产品研究</p></div>
+          <span class="report-arrow">→</span>
+        </a>
+        <a href="report.html?file=library/支付产品/Clink.md" class="report-item">
+          <div class="report-info"><h3>Clink</h3><p>支付集成工具产品研究</p></div>
+          <span class="report-arrow">→</span>
+        </a>
+        <a href="report.html?file=library/支付产品/海外主流支付机构概览.md" class="report-item">
+          <div class="report-info"><h3>海外主流支付机构概览</h3><p>全球支付格局与主流机构分析</p></div>
+          <span class="report-arrow">→</span>
+        </a>
+      </div>
+    </section>
+
+    <!-- 清单 -->
+    <section class="category-section" data-category="清单">
+      <div class="category-header">
+        <span class="category-name">研究清单与索引</span>
+        <span class="category-count">5 篇</span>
+      </div>
+      <div class="report-list">
+        <a href="report.html?file=library/清单/AI产品研究清单.md" class="report-item">
+          <div class="report-info"><h3>AI 产品研究清单</h3><p>全量 AI 产品研究对象与优先级管理</p></div>
+          <span class="report-arrow">→</span>
+        </a>
+        <a href="report.html?file=library/清单/优先级-Top10.md" class="report-item">
+          <div class="report-info"><h3>优先级 Top 10</h3><p>当前最高优先级研究对象排序</p></div>
+          <span class="report-arrow">→</span>
+        </a>
+        <a href="report.html?file=library/清单/Agent基础设施-待研究.md" class="report-item">
+          <div class="report-info"><h3>Agent 基础设施待研究</h3><p>Agent 生态基础设施研究待办</p></div>
+          <span class="report-arrow">→</span>
+        </a>
+        <a href="report.html?file=library/更新/2025-03-18.md" class="report-item">
+          <div class="report-info"><h3>研究更新 2025-03-18</h3><p>阶段性研究进度更新</p></div>
+          <span class="report-arrow">→</span>
+        </a>
+        <a href="report.html?file=library/更新/2025-03-25.md" class="report-item">
+          <div class="report-info"><h3>研究更新 2025-03-25</h3><p>阶段性研究进度更新</p></div>
+          <span class="report-arrow">→</span>
+        </a>
+      </div>
+    </section>
+
+  </div>
+</main>
+
+<footer>
+  <p>© 2026 Alex Chen · AI Product Research Library</p>
+  <a href="https://deerflow.tech" target="_blank" class="deerflow-mark" title="Created by Deerflow">DEERFLOW</a>
+</footer>
+
+<script>
+  const filterBtns = document.querySelectorAll('.filter-btn');
+  const sections = document.querySelectorAll('.category-section');
+
+  filterBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      filterBtns.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const filter = btn.dataset.filter;
+      sections.forEach(sec => {
+        sec.style.display = (filter === 'all' || sec.dataset.category === filter) ? '' : 'none';
+      });
+    });
+  });
+</script>
+</body>
+</html>
